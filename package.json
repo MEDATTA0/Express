@@ -9,7 +9,8 @@
     "axios": "^1.7.7",
     "body-parser": "^1.20.3",
     "express": "^4.21.1",
-    "mariadb": "^3.3.2"
+    "mariadb": "^3.3.2",
+    "prettier": "^3.3.3"
   },
   "devDependencies": {
     "nodemon": "^3.1.7"
