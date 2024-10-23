@@ -3,9 +3,9 @@ const port = 3000;
 
 const app = express();
 
-const todoRoutes = require("./routes/todosRoutes");
+const userRoutes = require("./routes/usersRoutes");
 
-app.use("/todos", todoRoutes);
+app.use("/users", userRoutes);
 
 app.get("/", (req, res) => {
   res.send("Welcome to Express");
