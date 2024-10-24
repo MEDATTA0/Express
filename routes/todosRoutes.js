@@ -9,6 +9,7 @@ router.use(bodyParser.json());
 //allTodos va différencier les todos d'un utilisateur des todos de tous utilisateurs qui est réservé aux administrateurs
 router.get("/allTodos", todosController.getAllTodos);
 
+//Getting user's todos
 router.get("/", todosController.getTodos);
 
 //Creating new task

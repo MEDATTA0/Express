@@ -1,16 +1,18 @@
 const todosModels = require("../models/todosModels");
 
 exports.getAllTodos = async (req, res) => {
-  //Pour vérifier le niveau d'accessibilité de l'utilisateur (A faire plus tard)
+  //To verify the accessibility level of the user (To do it soon)
   // const userId = req.params.userId;
 
   let rows;
   try {
     rows = await todosModels.getTodos();
-    //Si rows est vide
+    //Response depends whether row is empty or not
     if (rows == 0) {
-      res.json({ response: "Task empty !" });
-    } else res.json(rows);
+      res.status(204).json({ response: "Task empty !" });
+    } else {
+      res.status(200).json(rows);
+    }
   } catch (err) {
     res.status(500).json({ error: "Error while fetching server !" });
     console.log("Error : ", err);
@@ -23,11 +25,11 @@ exports.getTodos = async (req, res) => {
   try {
     rows = await todosModels.getTodos(userId);
     console.log(rows);
-    //Si rows est vide
+    //Response depends whether row is empty or not
     if (rows == 0) {
-      res.json({ response: "Task empty !" });
+      res.status(204).json({ response: "Task empty !" });
     } else {
-      res.json(rows);
+      res.status(200).json(rows);
     }
   } catch (err) {
     res.status(500).json({ error: "Error while fetching server !" });
@@ -40,7 +42,7 @@ exports.createTodo = async (req, res) => {
   const { title, task_description, isCompleted } = req.body;
   // Checking if variables are falsy or null
   if (!title || !task_description || typeof isCompleted === "undefined") {
-    return "Please fill fields";
+    res.status(400).json({ error: "Please fill fields" });
   }
   let response;
   try {
@@ -50,7 +52,7 @@ exports.createTodo = async (req, res) => {
       task_description,
       isCompleted
     );
-    res.json({
+    res.status(201).json({
       message: "Task added successfully",
       taskId: result.task_id,
     });
