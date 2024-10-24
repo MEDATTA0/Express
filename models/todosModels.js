@@ -41,7 +41,7 @@ exports.createTodo = async (userId, title, task_description, isCompleted) => {
   try {
     db_conn = await pool.getConnection();
     const sqlQuery = `INSERT INTO tasks (title, task_description, completed, userId) VALUES (?, ?, ?, ?)`;
-    const result = db_conn_conn.execute(sqlQuery, [
+    const result = await db_conn_conn.execute(sqlQuery, [
       title,
       task_description,
       isCompleted,
