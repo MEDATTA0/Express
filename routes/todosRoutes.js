@@ -1,15 +1,18 @@
 const express = require("express");
 const bodyParser = require("body-parser");
-const pool = require("../db/db_connect");
+const todosController = require("../controllers/todosController");
 
 const router = express.Router();
 router.use(bodyParser.json());
 
 //Getting all tasks
-router.get("/", async (req, res) => {});
+//allTodos va différencier les todos d'un utilisateur des todos de tous utilisateurs qui est réservé aux administrateurs
+router.get("/allTodos", todosController.getAllTodos);
+
+router.get("/", todosController.getTodos);
 
 //Creating new task
-router.post("/", async (req, res) => {});
+router.post("/", todosController.createTodo);
 
 //Updating task
 router.patch("/:taskId", async (req, res) => {});

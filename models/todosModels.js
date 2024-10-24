@@ -18,7 +18,6 @@ exports.getAllTodos = async () => {
 };
 
 exports.getTodos = async (userId) => {
-  const userId = req.params.userId;
   let db_conn;
   let response;
   try {
