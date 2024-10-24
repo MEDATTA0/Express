@@ -36,10 +36,6 @@ exports.getTodos = async (userId) => {
 };
 
 exports.createTodo = async (userId, title, task_description, isCompleted) => {
-  // Checking if variables are falsy or null
-  if (!title || !task_description || typeof isCompleted === "undefined") {
-    return res.status(400).json({ error: "Please fill fields." });
-  }
   let response;
   let db_conn;
   try {
