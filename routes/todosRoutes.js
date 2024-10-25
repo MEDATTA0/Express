@@ -1,24 +1,28 @@
-const express = require("express");
-const bodyParser = require("body-parser");
-const todosController = require("../controllers/todosController");
+import express from "express";
+import {
+  getAllTodos,
+  getTodos,
+  createTodo,
+} from "../controllers/todosController.js";
 
-const router = express.Router();
-router.use(bodyParser.json());
+const todoRoutes = express.Router();
+todoRoutes.use(express.json());
+todoRoutes.use(express.urlencoded({ extended: true }));
 
 //Getting all tasks
 //allTodos va différencier les todos d'un utilisateur des todos de tous utilisateurs qui est réservé aux administrateurs
-router.get("/allTodos", todosController.getAllTodos);
+todoRoutes.get("/allTodos", getAllTodos);
 
 //Getting user's todos
-router.get("/", todosController.getTodos);
+todoRoutes.get("/", getTodos);
 
 //Creating new task
-router.post("/", todosController.createTodo);
+todoRoutes.post("/", createTodo);
 
 //Updating task
-router.patch("/:taskId", async (req, res) => {});
+todoRoutes.patch("/:taskId", async (req, res) => {});
 
 //Deleting task
-router.delete("/:taskId", async (req, res) => {});
+todoRoutes.delete("/:taskId", async (req, res) => {});
 
-module.exports = router;
+export default todoRoutes;

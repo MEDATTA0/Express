@@ -1,7 +1,7 @@
-const express = require("express");
-const pool = require("../db/db_connect");
+import { Router } from "express";
+// const pool = require("../db/db_connect");
 
-const router = express.Router();
+const router = Router();
 
 router.post("/login", (req, res) => {});
 
@@ -11,4 +11,4 @@ router.patch("/update", (req, res) => {});
 
 router.post("/access", (req, res) => {});
 
-module.exports = router;
+export default router;

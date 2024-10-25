@@ -1,11 +1,8 @@
-const express = require("express");
+import express from "express";
 const port = 3000;
-
 const app = express();
 
-const authRoutes = require("./routes/auth");
-app.use("/auth", authRoutes);
-const userRoutes = require("./routes/usersRoutes");
+import userRoutes from "./routes/usersRoutes.js";
 app.use("/users", userRoutes);
 
 app.get("/", (req, res) => {
