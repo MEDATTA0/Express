@@ -1,5 +1,5 @@
 import express from "express";
-import { checkCreateParams, checkUpdateParams, wrongtodoId } from "../middlewares/todosMiddlewares.js";
+import { checkCreateParams, checkId, checkUpdateParams } from "../middlewares/todosMiddlewares.js";
 import {
   getAllTodos,
   getTodos,
@@ -14,13 +14,12 @@ todoRoutes.use(express.json());
 todoRoutes.use(express.urlencoded({ extended: true }));
 
 //Getting all todos
-//allTodos va différencier les todos d'un utilisateur des todos de tous utilisateurs qui est réservé aux administrateurs
 todoRoutes.get("/allTodos", getAllTodos);
 
 //Getting user's todos
 todoRoutes.get("/", getTodos);
 
-todoRoutes.get("/:todoId", wrongtodoId, getTodo)
+todoRoutes.get("/:todoId", checkId, getTodo)
 
 //Creating new todo
 todoRoutes.post("/", checkCreateParams, createTodo);
@@ -29,6 +28,6 @@ todoRoutes.post("/", checkCreateParams, createTodo);
 todoRoutes.patch("/:todoId", checkUpdateParams, updateTodo);
 
 //Deleting todo
-todoRoutes.delete("/:todoId", wrongtodoId, deleteTodo);
+todoRoutes.delete("/:todoId", checkId, deleteTodo);
 
 export default todoRoutes;

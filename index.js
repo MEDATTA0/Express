@@ -2,6 +2,8 @@ import express from "express";
 const port = 3000;
 const app = express();
 
+app.use(express.json())
+app.use(express.urlencoded({ extended: true }))
 import userRoutes from "./routes/usersRoutes.js";
 app.use("/users", userRoutes);
 
