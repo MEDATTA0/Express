@@ -18,7 +18,7 @@ const Todo = sequelize.define(
 
     userId: {
       type: DataTypes.INTEGER,
-      allowNull: true,
+      allowNull: false,
     },
 
     title: {
@@ -38,7 +38,7 @@ const Todo = sequelize.define(
 
     completed: {
       type: DataTypes.BOOLEAN,
-      allowNull: true,
+      allowNull: false,
       defaultValue: false,
     },
   },

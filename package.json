@@ -12,13 +12,13 @@
     "body-parser": "^1.20.3",
     "express": "^4.21.1",
     "mariadb": "^3.3.2",
-    "prettier": "^3.3.3",
     "sequelize": "^6.37.4",
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.1"
   },
   "devDependencies": {
-    "nodemon": "^3.1.7"
+    "nodemon": "^3.1.7",
+    "prettier": "^3.3.3"
   },
   "scripts": {
     "start": "node index.js",

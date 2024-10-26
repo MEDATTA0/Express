@@ -6,12 +6,12 @@ import {
 
 export async function getAllTodos(req, res) {
   //To verify the accessibility level of the user (To do it soon)
-  // const userId = req.params.userId;
-
+  //const isAdmin = req.params.userId;
+  //request to verify whether user is admin or not
   let rows;
   try {
     //getTodos from todosModels
-    rows = await db_getAllyTodos();
+    rows = await db_getAllTodos();
     //Response depends whether row is empty or not
     if (rows == 0) {
       res.status(204).json({ response: "Task empty !" });
@@ -45,10 +45,7 @@ export async function getTodos(req, res) {
 export async function createTodo(req, res) {
   const userId = req.params.userId;
   const { title, task_description, isCompleted } = req.body;
-  // Checking if variables are falsy or null
-  if (!title || !task_description || typeof isCompleted === "undefined") {
-    res.status(400).json({ error: "Please fill fields" });
-  }
+
   let response;
   try {
     response = await db_createTodo(
