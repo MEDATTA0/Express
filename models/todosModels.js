@@ -6,7 +6,7 @@ export async function db_getAllTodos() {
   let response;
   try {
     // db_conn = await pool.getConnection();
-    // const sqlQuery = "SELECT * FROM tasks";
+    // const sqlQuery = "SELECT * FROM todos";
     // const rows = await db_conn.execute(sqlQuery);
     // response = rows;
     const rows = await Todo.findAll({ where: { userId: userId } });
@@ -25,7 +25,7 @@ export async function db_getTodos(userId) {
   let response;
   try {
     // db_conn = await pool.getConnection();
-    // const sqlQuery = "SELECT * FROM tasks WHERE userId=? ";
+    // const sqlQuery = "SELECT * FROM todos WHERE userId=? ";
     // const rows = await db_conn.execute(sqlQuery, [userId]);
     const rows = await Todo.findAll({ where: { userId: userId } });
     response = rows;
@@ -38,27 +38,38 @@ export async function db_getTodos(userId) {
   }
 }
 
+export async function db_getTodo(userId, todoId) {
+  try {
+    //findOne returns none if nothing is found
+    const row = await Todo.findOne({ where: { id: todoId, userId: userId } })
+    return row;
+  } catch (error) {
+    console.log("error : ", error);
+    return error;
+  }
+}
+
 export async function db_createTodo(
   userId,
   title,
-  task_description,
+  todo_description,
   isCompleted
 ) {
   let response;
   //   let db_conn;
   try {
     // db_conn = await pool.getConnection();
-    // const sqlQuery = `INSERT INTO tasks (title, task_description, completed, userId) VALUES (?, ?, ?, ?)`;
+    // const sqlQuery = `INSERT INTO todos (title, todo_description, completed, userId) VALUES (?, ?, ?, ?)`;
     // const result = await db_conn_conn.execute(sqlQuery, [
     //   title,
-    //   task_description,
+    //   todo_description,
     //   isCompleted,
     //   userId,
     // ]);
     const result = await Todo.bulkCreate([
       { userId: userId },
       { title: title },
-      { description: task_description },
+      { description: todo_description },
       { completed: isCompleted },
     ]);
     response = response;
@@ -68,5 +79,25 @@ export async function db_createTodo(
   } finally {
     // if (db_conn) db_conn.release();
     return response;
+  }
+}
+
+export async function db_updateTodo(userId, todoId, isCompleted) {
+  try {
+    const row = await Todo.update({ completed: isCompleted }, { where: { id: todoId, userId: userId } })
+  } catch (error) {
+    console.log("error : ", error)
+    return error
+  }
+}
+
+export async function db_deleteTodo(userId, todoId) {
+  try {
+    //destroy returns the number of the destroyed rows
+    const row = await Todo.destroy({ where: { id: todoId, userId: userId } })
+    return row;
+  } catch (error) {
+    console.log("error : ", error);
+    return error;
   }
 }

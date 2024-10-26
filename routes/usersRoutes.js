@@ -1,5 +1,5 @@
 import express from "express";
-
+import { wrongUserId } from "../middlewares/usersMiddlewares.js";
 const userRoutes = express.Router();
 userRoutes.use(express.json());
 userRoutes.use(express.urlencoded({ extended: true }));
@@ -27,6 +27,6 @@ userRoutes.post("/:userId/reset", async (req, res) => { });
 
 //The route for todos operations of a user
 import todoRoutes from "./todosRoutes.js";
-userRoutes.use("/:userId/todos", todoRoutes);
+userRoutes.use("/:userId/todos", wrongUserId, todoRoutes);
 
 export default userRoutes;

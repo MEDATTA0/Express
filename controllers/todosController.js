@@ -2,6 +2,9 @@ import {
   db_getAllTodos,
   db_getTodos,
   db_createTodo,
+  db_getTodo,
+  db_updateTodo,
+  db_deleteTodo,
 } from "../models/todosModels.js";
 
 export async function getAllTodos(req, res) {
@@ -14,7 +17,7 @@ export async function getAllTodos(req, res) {
     rows = await db_getAllTodos();
     //Response depends whether row is empty or not
     if (rows == 0) {
-      res.status(204).json({ response: "Task empty !" });
+      res.status(204).json({ response: "todo empty !" });
     } else {
       res.status(200).json(rows);
     }
@@ -32,7 +35,7 @@ export async function getTodos(req, res) {
     console.log(rows);
     //Response depends whether row is empty or not
     if (rows == 0) {
-      res.status(204).json({ response: "Task empty !" });
+      res.status(204).json({ response: "Todo empty !" });
     } else {
       res.status(200).json(rows);
     }
@@ -42,27 +45,82 @@ export async function getTodos(req, res) {
   }
 }
 
+export async function getTodo(req, res) {
+  const userId = req.params.userId;
+  const todoId = req.params.todoId;
+  let response;
+  try {
+    response = await db_getTodo(userId, todoId);
+    res.status(200).json(response)
+    console.log(response);
+  } catch (error) {
+    res.status(500).json({
+      error: "Error while getting todo"
+    });
+    console.log("error: ", error);
+  }
+
+}
+
 export async function createTodo(req, res) {
   const userId = req.params.userId;
-  const { title, task_description, isCompleted } = req.body;
+  const { title, todo_description, isCompleted } = req.body;
 
   let response;
   try {
     response = await db_createTodo(
       userId,
       title,
-      task_description,
+      todo_description,
       isCompleted
     );
     res.status(201).json({
-      message: "Task added successfully",
+      message: "Todo added successfully",
       data: {
-        taskId: result.task_id,
+        todoId: result.todo_id,
       },
     });
-    console.log("Task added successfully");
+    console.log("Todo added successfully !\n", response);
   } catch (err) {
-    res.status(500).json({ error: "Server while adding task" });
+    res.status(500).json({ error: "Server while adding todo" });
     console.log("Error : ", err);
   }
+}
+
+export async function updateTodo(req, res) {
+  const userId = req.params.userId;
+  const todoId = req.params.todoId;
+  const isCompleted = req.body;
+  let response;
+  try {
+    response = await db_updateTodo(userId, todoId, isCompleted);
+    res.status(204).json({
+      message: "Todo updated successfully !"
+    })
+    console.log("Todo updated successfully !\n", response);
+  } catch (error) {
+    res.status(500).json({
+      error: "Error while updating todo"
+    });
+    console.log("error: ", error);
+  }
+}
+
+export async function deleteTodo(req, res) {
+  const userId = req.params.userId;
+  const todoId = req.params.todoId;
+  let response;
+  try {
+    response = await db_deleteTodo(userId, todoId);
+    res.status(204).json({
+      message: "Todo deleted successfully !"
+    })
+    console.log("Todo deleted successfully !\n", response);
+  } catch (error) {
+    res.status(500).json({
+      error: "Error while deleting todo"
+    });
+    console.log("error: ", error);
+  }
+
 }

@@ -1,43 +1,34 @@
 import express from "express";
+import { checkCreateParams, checkUpdateParams, wrongtodoId } from "../middlewares/todosMiddlewares.js";
 import {
   getAllTodos,
   getTodos,
   createTodo,
+  updateTodo,
+  deleteTodo,
+  getTodo,
 } from "../controllers/todosController.js";
 
 const todoRoutes = express.Router();
 todoRoutes.use(express.json());
 todoRoutes.use(express.urlencoded({ extended: true }));
 
-//Getting all tasks
+//Getting all todos
 //allTodos va différencier les todos d'un utilisateur des todos de tous utilisateurs qui est réservé aux administrateurs
-todoRoutes.get("/allTodos", async (req, res, next) => {
-  const userId = req.params.userId
-    (Number.parseInt(userId)) ? next() : res.status(400).json({ message: "BAD USER ID" })
-}, getAllTodos);
+todoRoutes.get("/allTodos", getAllTodos);
 
 //Getting user's todos
-todoRoutes.get("/", async (req, res, next) => {
-  const userId = req.params.userId;
-  (Number.parseInt(userId)) ? next() : res.status(400).json({ message: "BAD USER ID" })
-}, getTodos);
+todoRoutes.get("/", getTodos);
 
-//Creating new task
-todoRoutes.post("/", async (req, res, next) => {
-  const userId = req.params.userId;
-  const { title, task_description, isCompleted } = req.body;
-  // Checking if variables are falsy or null
-  if (!Number.parseInt(userId) || !title || !task_description || typeof isCompleted === "undefined") {
-    res.status(400).json({ error: "Please fill fields" });
-  } else {
-    next()
-  }
-}, createTodo);
+todoRoutes.get("/:todoId", wrongtodoId, getTodo)
 
-//Updating task
-todoRoutes.patch("/:taskId", async (req, res) => { });
+//Creating new todo
+todoRoutes.post("/", checkCreateParams, createTodo);
 
-//Deleting task
-todoRoutes.delete("/:taskId", async (req, res) => { });
+//Updating todo
+todoRoutes.patch("/:todoId", checkUpdateParams, updateTodo);
+
+//Deleting todo
+todoRoutes.delete("/:todoId", wrongtodoId, deleteTodo);
 
 export default todoRoutes;

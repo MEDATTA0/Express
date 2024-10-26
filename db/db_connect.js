@@ -7,9 +7,9 @@ const sequelize = new Sequelize("todos", "admin", "admin", {
 });
 
 const Todo = sequelize.define(
-  "tasks",
+  "todos",
   {
-    task_id: {
+    id: {
       type: DataTypes.INTEGER,
       allowNull: false,
       autoIncrement: true,
