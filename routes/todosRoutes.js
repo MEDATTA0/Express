@@ -1,5 +1,9 @@
 import express from "express";
-import { checkCreateParams, checkId, checkUpdateParams } from "../middlewares/todosMiddlewares.js";
+import {
+  checkCreateParams,
+  checkId,
+  checkUpdateParams,
+} from "../middlewares/todosMiddlewares.js";
 import {
   getAllTodos,
   getTodos,
@@ -19,7 +23,7 @@ todoRoutes.get("/allTodos", getAllTodos);
 //Getting user's todos
 todoRoutes.get("/", getTodos);
 
-todoRoutes.get("/:todoId", checkId, getTodo)
+todoRoutes.get("/:todoId", checkId, getTodo);
 
 //Creating new todo
 todoRoutes.post("/", checkCreateParams, createTodo);

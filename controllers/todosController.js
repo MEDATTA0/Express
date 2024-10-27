@@ -18,7 +18,7 @@ export async function getAllTodos(req, res) {
       TodoLogger.info(`Todo found : ${rows}`);
       res.status(200).json({
         status: "success",
-        data: { rows },
+        data: rows,
       });
     }
   } catch (error) {
@@ -47,7 +47,7 @@ export async function getTodos(req, res) {
       res.status(200).json({
         status: "success",
         message: "Todos found",
-        data: { rows },
+        data: rows,
       });
     }
   } catch (error) {
@@ -75,7 +75,7 @@ export async function getTodo(req, res) {
       res.status(200).json({
         status: "success",
         message: "Todo found",
-        data: { row },
+        data: row,
       });
     }
   } catch (error) {
@@ -101,7 +101,7 @@ export async function createTodo(req, res) {
     TodoLogger.info(`Todo created successfully: ${newTodo.id}`);
     res.status(201).json({
       message: "Todo added successfully",
-      data: { newTodo },
+      data: newTodo,
     });
     console.log("Todo added successfully !\n", newTodo.toJSON());
   } catch (error) {
