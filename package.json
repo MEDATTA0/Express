@@ -10,11 +10,13 @@
     "@sequelize/mariadb": "^7.0.0-alpha.43",
     "axios": "^1.7.7",
     "body-parser": "^1.20.3",
+    "chalk": "^5.3.0",
     "express": "^4.21.1",
     "mariadb": "^3.3.2",
     "sequelize": "^6.37.4",
     "swagger-jsdoc": "^6.2.8",
-    "swagger-ui-express": "^5.0.1"
+    "swagger-ui-express": "^5.0.1",
+    "winston": "^3.15.0"
   },
   "devDependencies": {
     "nodemon": "^3.1.7",

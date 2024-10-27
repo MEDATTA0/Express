@@ -1,4 +1,5 @@
-import { Todo } from "../models/todosModels.js"
+import { Todo } from "../models/todosModels.js";
+import TodoLogger from "../utilities/logger.js";
 
 export async function getAllTodos(req, res) {
   //To verify the accessibility level of the user (To do it soon)
@@ -8,22 +9,24 @@ export async function getAllTodos(req, res) {
     const rows = await Todo.findAll();
     //Response depends whether row is empty or not
     if (rows == 0) {
+      TodoLogger.info(`No todo`);
       res.status(200).json({
         status: "success",
-        message: "todo empty !"
+        message: "todo empty !",
       });
     } else {
+      TodoLogger.info(`Todo found : ${rows}`);
       res.status(200).json({
         status: "success",
-        data: { rows }
+        data: { rows },
       });
     }
-  } catch (err) {
+  } catch (error) {
+    TodoLogger.error(`Error getting todo: ${error.message}`);
     res.status(500).json({
       status: "failed",
-      message: "Error while fetching database !"
+      message: "Error while fetching database !",
     });
-    console.error("Error : ", err);
   }
 }
 
@@ -34,23 +37,25 @@ export async function getTodos(req, res) {
     console.log(rows);
     //Response depends whether row is empty or not
     if (rows == 0) {
+      TodoLogger.info(`No todo for user ${userId}`);
       res.status(200).json({
         status: "success",
-        message: "Todo empty !"
+        message: "Todo empty !",
       });
     } else {
+      TodoLogger.info(`Todo found : ${rows}`);
       res.status(200).json({
         status: "success",
         message: "Todos found",
-        data: { rows }
+        data: { rows },
       });
     }
-  } catch (err) {
+  } catch (error) {
+    TodoLogger.error(`Error getting todos : ${error.message}`);
     res.status(500).json({
       status: "failure",
-      message: "Error while fetching database !"
+      message: "Error while getting todo !",
     });
-    console.error("Error : ", err);
   }
 }
 
@@ -58,28 +63,27 @@ export async function getTodo(req, res) {
   const userId = req.params.userId || 1;
   const todoId = req.params.todoId;
   try {
-    const row = await Todo.findOne({ where: { id: todoId, userId: userId } })
+    const row = await Todo.findOne({ where: { id: todoId, userId: userId } });
     if (row == null) {
+      TodoLogger.warn(`Todo with id ${todoId} not found`);
       res.status(404).json({
-        status: "failed",
+        status: "failure",
         message: "todo not found",
-      })
-    }
-    else {
-      res.status(200).json(
-        {
-          status: "success",
-          message: "Todo found",
-          data: { row }
-        })
-      console.log(row);
+      });
+    } else {
+      TodoLogger.info(`Todo with id ${todoId} found : ${row}`);
+      res.status(200).json({
+        status: "success",
+        message: "Todo found",
+        data: { row },
+      });
     }
   } catch (error) {
+    TodoLogger.error(`Error getting todo: ${error.message}`);
     res.status(500).json({
       status: "failure",
-      message: "Error while getting todo"
+      message: "Error while getting todo",
     });
-    console.error("error: ", error);
   }
 }
 
@@ -89,60 +93,59 @@ export async function createTodo(req, res) {
 
   let newTodo;
   try {
-    newTodo = await Todo.create(
-      {
-        userId,
-        title,
-        ...args,
-      });
+    newTodo = await Todo.create({
+      userId,
+      title,
+      ...args,
+    });
+    TodoLogger.info(`Todo created successfully: ${newTodo.id}`);
     res.status(201).json({
       message: "Todo added successfully",
-      data: { newTodo }
+      data: { newTodo },
     });
     console.log("Todo added successfully !\n", newTodo.toJSON());
-  } catch (err) {
+  } catch (error) {
+    TodoLogger.error(`Error creating todo: ${error.message}`);
     res.status(500).json({
       status: "failure",
-      message: "Error inserting todo in database"
+      message: "Error creating todo",
     });
-    console.error("Error inserting data : ", err);
   }
 }
 
 export async function updateTodo(req, res) {
   const userId = req.params.userId || 1;
   const todoId = req.params.todoId;
-  const { ...args } = req.body
+  const { ...args } = req.body;
   try {
     //To ensure if it exists
-    const row = await Todo.findOne({ where: { id: todoId, userId: userId } })
+    const row = await Todo.findOne({ where: { id: todoId, userId: userId } });
     if (row == null) {
+      TodoLogger.warn(`Todo with id ${todoId} not found`);
       res.status(404).json({
         status: "failure",
         message: "Todo not found",
         todoId: todoId,
-      })
-      console.log("Todo not found")
-    }
-    else {
+      });
+    } else {
       await Todo.update(
         { ...args },
-        { where: { id: todoId, userId: userId } }, //To obtain updated records
+        { where: { id: todoId, userId: userId } } //To obtain updated records
       );
-      const updatedTodo = await Todo.findByPk(todoId)
+      const updatedTodo = await Todo.findByPk(todoId);
+      TodoLogger.info(`Todo with id ${todoId} found and updated successfully`);
       res.status(200).json({
         status: "success",
         message: "Todo updated successfully !",
         data: updatedTodo,
       });
-      console.log("Todo updated successfully !\n", row);
     }
   } catch (error) {
+    TodoLogger.error(`Error updating todo: ${error.message}`);
     res.status(500).json({
       status: "failure",
       message: "Error while updating todo in database",
     });
-    console.error("error: ", error);
   }
 }
 
@@ -150,27 +153,27 @@ export async function deleteTodo(req, res) {
   const userId = req.params.userId || 1;
   const todoId = req.params.todoId;
   try {
-    const row = await Todo.destroy({ where: { id: todoId, userId: userId } })
+    const row = await Todo.destroy({ where: { id: todoId, userId: userId } });
     if (row == 0) {
-      res.status(200).json({
+      TodoLogger.warn(`Todo with id ${todoId} not found`);
+      res.status(404).json({
         status: "success",
         message: `Todo not found !`,
         id: todoId,
-      })
-    }
-    else {
+      });
+    } else {
+      TodoLogger.info(`Todo with id ${todoId} deleted successfully`);
       res.status(200).json({
         status: "success",
         message: "Todo deleted successfully !",
         id: todoId,
-      })
+      });
     }
-    console.log("Todo deleted successfully !\n", row);
   } catch (error) {
+    TodoLogger.error(`Error deleting todo: ${error.message}`);
     res.status(500).json({
       status: "failure",
-      message: "Error while deleting todo in database"
+      message: "Error while deleting todo",
     });
-    console.error("error: ", error);
   }
 }

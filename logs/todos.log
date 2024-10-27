@@ -1,0 +1,9 @@
+2024-10-27 17:04:34 [[33mwarn[39m] : Todo with id 4 not found
+2024-10-27 17:06:31 [[33mwarn[39m] : Todo with id 4 not found
+2024-10-27 17:06:59 [[33mwarn[39m] : Todo with id 4 not found
+2024-10-27 17:07:04 [[33mwarn[39m] : Todo with id 6 not found
+2024-10-27 17:07:10 [[32minfo[39m] : Todo with id 20 found : [object SequelizeInstance:todos]
+2024-10-27 17:07:23 [[32minfo[39m] : Todo with id 20 found : [object SequelizeInstance:todos]
+2024-10-27 17:07:40 [[33mwarn[39m] : Title is required
+2024-10-27 17:07:49 [[32minfo[39m] : Todo created successfully: 46
+2024-10-27 17:08:13 [[32minfo[39m] : Todo with id 30 found and updated successfully
