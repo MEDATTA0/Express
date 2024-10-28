@@ -41,6 +41,7 @@ paths:
                   type: string
                 is_completed:
                   type: boolean
+              
               required:
                 - title
               # $ref: "#/components/schemas/newTodo"

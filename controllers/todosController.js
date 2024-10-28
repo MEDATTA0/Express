@@ -1,4 +1,4 @@
-import { Todo } from "../models/todosModels.js";
+import { Todo } from "../models/mariadbTodosModels.js";
 import TodoLogger from "../utilities/logger.js";
 
 export async function getAllTodos(req, res) {
@@ -15,7 +15,7 @@ export async function getAllTodos(req, res) {
         message: "todo empty !",
       });
     } else {
-      TodoLogger.info(`Todo found : ${rows}`);
+      TodoLogger.info(`Todos found : ${rows}`);
       res.status(200).json({
         status: "success",
         data: rows,
@@ -24,7 +24,7 @@ export async function getAllTodos(req, res) {
   } catch (error) {
     TodoLogger.error(`Error getting todo: ${error.message}`);
     res.status(500).json({
-      status: "failed",
+      status: "failure",
       message: "Error while fetching database !",
     });
   }
@@ -43,7 +43,7 @@ export async function getTodos(req, res) {
         message: "Todo empty !",
       });
     } else {
-      TodoLogger.info(`Todo found : ${rows}`);
+      TodoLogger.info(`Todos for user ${userId} found  : ${rows}`);
       res.status(200).json({
         status: "success",
         message: "Todos found",
@@ -71,7 +71,9 @@ export async function getTodo(req, res) {
         message: "todo not found",
       });
     } else {
-      TodoLogger.info(`Todo with id ${todoId} found : ${row}`);
+      TodoLogger.info(
+        `Todo with id ${todoId} for user ${userId} found : ${row}`
+      );
       res.status(200).json({
         status: "success",
         message: "Todo found",
@@ -98,8 +100,11 @@ export async function createTodo(req, res) {
       title,
       ...args,
     });
-    TodoLogger.info(`Todo created successfully: ${newTodo.id}`);
+    TodoLogger.info(
+      `Todo for user ${userId} created successfully: ${newTodo.id}`
+    );
     res.status(201).json({
+      status: "success",
       message: "Todo added successfully",
       data: newTodo,
     });
@@ -133,7 +138,9 @@ export async function updateTodo(req, res) {
         { where: { id: todoId, userId: userId } } //To obtain updated records
       );
       const updatedTodo = await Todo.findByPk(todoId);
-      TodoLogger.info(`Todo with id ${todoId} found and updated successfully`);
+      TodoLogger.info(
+        `Todo with id ${todoId} for ${userId} found and updated successfully`
+      );
       res.status(200).json({
         status: "success",
         message: "Todo updated successfully !",
@@ -157,12 +164,14 @@ export async function deleteTodo(req, res) {
     if (row == 0) {
       TodoLogger.warn(`Todo with id ${todoId} not found`);
       res.status(404).json({
-        status: "success",
+        status: "failure",
         message: `Todo not found !`,
         id: todoId,
       });
     } else {
-      TodoLogger.info(`Todo with id ${todoId} deleted successfully`);
+      TodoLogger.info(
+        `Todo with id ${todoId} for ${userId} deleted successfully`
+      );
       res.status(200).json({
         status: "success",
         message: "Todo deleted successfully !",
