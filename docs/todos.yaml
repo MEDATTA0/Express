@@ -1,0 +1,173 @@
+openapi: 3.0.0
+info:
+  title: API DOCUMENTATION
+  description: API documentation for managing todos
+  version: "1.0.0"
+
+paths:
+  /todos:                    
+    get:
+      summary: Returns all todos from the user with userId
+      responses:
+        "200":
+          description: a list of all todos from user
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  message:
+                    type: string
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/todo"
+    post:
+      summary: create new todo
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                todo_description:
+                  type: string
+                due_date:
+                  type: string
+                is_completed:
+                  type: boolean
+              
+              required:
+                - title
+              # $ref: "#/components/schemas/newTodo"
+      responses:
+        "201":
+          description: data of created todo
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  message: 
+                    type: string
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/todo"
+
+  /todos/allTodos:
+      get:
+        summary: gets all todos
+        responses:
+          "200":
+            description: a list of all todos
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    status:
+                      type: string
+                    message:
+                      type: string
+                    data:
+                      type: array
+                      items:
+                        $ref: "#/components/schemas/todo"
+    
+  /todos/:todoId:
+      get:
+        summary: Returns todo with id todoId
+        responses:
+          "200":
+            description: todo with todoId from user
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    status:
+                      type: string
+                    message:
+                      type: string
+                    data:
+                      type: array
+                      items:
+                        $ref: "#/components/schemas/todo"
+      patch:
+        summary: update todo with id todoId
+        requestBody:
+          required: false
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  title:
+                    type: string
+                  todo_description:
+                    type: string
+                  due_date:
+                    type: string
+                  is_completed:
+                    type: boolean
+        responses:
+          "200":
+            description: data of updated todo
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    status:
+                      type: string
+                    message:
+                      type: string
+                    data:
+                      type: array
+                      items:
+                        $ref: "#/components/schemas/todo"
+      delete:
+        summary: delete todo with id todoId
+        responses:
+          "200":
+            description: todoId of deleted todo
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    status:
+                      type: string
+                    message:
+                      type: string
+                    data:
+                      type: integer
+components:
+  schemas:
+    todo:
+      type: object
+      properties:
+        id:
+          type: integer
+        userId:
+          type: integer
+        title:
+          type: string
+        todo_description:
+          type: string
+        due_date:
+          type: string
+        is_completed:
+          type: boolean
+        createdAt:
+          type: string
+        updatedAt:
+          type: string

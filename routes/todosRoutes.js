@@ -1,28 +1,37 @@
 import express from "express";
 import {
+  checkCreateParams,
+  checkId,
+  checkUpdateParams,
+} from "../middlewares/todosMiddlewares.js";
+import {
   getAllTodos,
   getTodos,
   createTodo,
+  updateTodo,
+  deleteTodo,
+  getTodo,
 } from "../controllers/todosController.js";
 
 const todoRoutes = express.Router();
 todoRoutes.use(express.json());
 todoRoutes.use(express.urlencoded({ extended: true }));
 
-//Getting all tasks
-//allTodos va différencier les todos d'un utilisateur des todos de tous utilisateurs qui est réservé aux administrateurs
+//Getting all todos
 todoRoutes.get("/allTodos", getAllTodos);
 
 //Getting user's todos
 todoRoutes.get("/", getTodos);
 
-//Creating new task
-todoRoutes.post("/", createTodo);
+todoRoutes.get("/:todoId", checkId, getTodo);
 
-//Updating task
-todoRoutes.patch("/:taskId", async (req, res) => {});
+//Creating new todo
+todoRoutes.post("/", checkCreateParams, createTodo);
 
-//Deleting task
-todoRoutes.delete("/:taskId", async (req, res) => {});
+//Updating todo
+todoRoutes.patch("/:todoId", checkUpdateParams, updateTodo);
+
+//Deleting todo
+todoRoutes.delete("/:todoId", checkId, deleteTodo);
 
 export default todoRoutes;

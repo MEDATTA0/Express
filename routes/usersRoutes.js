@@ -1,4 +1,6 @@
 import express from "express";
+import { checkId } from "../middlewares/usersMiddlewares.js";
+import todoRoutes from "./todosRoutes.js";
 
 const userRoutes = express.Router();
 userRoutes.use(express.json());
@@ -26,7 +28,6 @@ userRoutes.patch("/:userId/password", async (req, res) => {});
 userRoutes.post("/:userId/reset", async (req, res) => {});
 
 //The route for todos operations of a user
-import todoRoutes from "./todosRoutes.js";
-userRoutes.use("/:userId/todos", todoRoutes);
+userRoutes.use("/:userId/todos", checkId, todoRoutes);
 
 export default userRoutes;

@@ -1,63 +1,14 @@
 // import { createPool } from "mariadb";
-const { Sequelize, DataTypes } = await import("sequelize");
+import { Sequelize } from "sequelize";
 
-const sequelize = new Sequelize("todos", "admin", "admin", {
+const sequelize = new Sequelize("todosDB", "admin", "admin", {
   host: "localhost",
   dialect: "mariadb",
 });
 
-const Todo = sequelize.define(
-  "tasks",
-  {
-    task_id: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      autoIncrement: true,
-      primaryKey: true,
-    },
-
-    userId: {
-      type: DataTypes.INTEGER,
-      allowNull: true,
-    },
-
-    title: {
-      type: DataTypes.TEXT,
-      allowNull: false,
-    },
-
-    description: {
-      type: DataTypes.TEXT,
-      allowNull: true,
-    },
-
-    due_date: {
-      type: DataTypes.DATE,
-      allowNull: true,
-    },
-
-    completed: {
-      type: DataTypes.BOOLEAN,
-      allowNull: true,
-      defaultValue: false,
-    },
-  },
-
-  {
-    timestamps: true,
-  }
-);
+export { sequelize }
 
 //To ensure table is created and synchronised and force:true means that table will be reset on every boot
-Todo.sync({ force: true })
-  .then((res) => {
-    console.log(res, " model was synchronized successfully.");
-  })
-  .catch((error) => {
-    console.log("Error while synchronizing model : ", error);
-  });
-
-export { Todo };
 
 // const User = sequelize.define("users", {
 //   id: {
