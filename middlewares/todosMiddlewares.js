@@ -1,13 +1,14 @@
-import TodoLogger from "../utilities/logger.js";
+import TodoLogger from "../utilities/v1/todosLogger.js";
 
 export async function checkId(req, res, next) {
+  const userId = req.params.userId || 1;
   const todoId = req.params.todoId;
-  if (typeof todoId === "number") {
-    TodoLogger.warn(`Bad todo id : ${todoId}`);
-    res.status(400).json({
-      status: "failed",
-      message: "BAD Todo ID",
-      todoId,
+  if (!Number.parseInt(todoId)) {
+    TodoLogger.warn(`bad todo id : ${todoId} from user ${userId}`);
+    return res.status(400).json({
+      status: "failure",
+      message: "bad todo id",
+      id: todoId,
     });
   } else {
     next();
@@ -15,102 +16,109 @@ export async function checkId(req, res, next) {
 }
 
 export async function checkCreateParams(req, res, next) {
-  let { title, ...args } = req.body;
-  let { todo_description, is_completed } = args;
-  let fields = Object.keys(args);
-  const allowedFields = ["todo_description", "is_completed"];
-  let notAllowedFields = [];
-  for (let i = 0; i < fields.length; i++) {
-    // console.log(fields[i])
-    if (!allowedFields.includes(fields[i])) {
-      notAllowedFields.push(fields[i]);
-    }
-  }
-  if (notAllowedFields != 0) {
-    TodoLogger.warn(`Fields not allowed : ${notAllowedFields}`);
-    res.status(400).json({
-      status: "failure",
-      message: "Fields not allowed !",
-      notAllowedFields,
-    });
-    return;
-  }
+  const userId = req.params.userId || 1;
+  const { title, ...args } = req.body;
 
-  if (is_completed) {
-    try {
-      is_completed = Boolean(is_completed);
-    } catch (error) {
-      TodoLogger.warn("field is_completed must be a boolean");
-      res.status(400).json({
+  // Checking if the body is empty
+  if (Object.keys(req.body).length === 0) {
+    //To tack which user is kidding us
+    TodoLogger.error(`Error, No field in the body request from user ${userId}`);
+    return res.status(400).json({
+      status: "failure",
+      message: "no field entered",
+    });
+  } else if (title === "") {
+    TodoLogger.warn(
+      `Error creating todo from user ${userId}. Error: Title is required`
+    );
+    return res.status(400).json({
+      status: "failure",
+      message: "please enter a title",
+    });
+  } else if (Object.keys(args).length !== 0) {
+    let fields = Object.keys(args);
+    const allowedFields = ["todo_description", "is_completed"];
+    let notAllowedFields = [];
+    for (let i = 0; i < fields.length; i++) {
+      // console.log(fields[i])
+      if (!allowedFields.includes(fields[i])) {
+        notAllowedFields.push(fields[i]);
+      }
+    }
+    if (notAllowedFields != 0) {
+      TodoLogger.warn(`Fields not allowed : ${notAllowedFields}`);
+      return res.status(400).json({
         status: "failure",
-        message: "Please completed must be boolean",
+        message: "fields not allowed !",
+        notAllowedFields,
       });
-      console.error("error : ", error);
-      return;
+    }
+    if (
+      args.is_completed !== undefined &&
+      args.is_completed !== "true" &&
+      args.is_completed !== "false"
+    ) {
+      //   args.is_completed = true;
+      // } else if (args.is_completed === "false" || args.is_completed === false) {
+      //   args.is_completed = false;
+      // } else {
+      TodoLogger.warn("field is_completed must be boolean");
+      return res.status(400).json({
+        status: "failure",
+        message: "is_completed must be boolean",
+      });
     }
   }
-  // Checking if variables are falsy or null
-  if (!title || title === "") {
-    TodoLogger.warn("Title is required");
-    res.status(400).json({
-      status: "failure",
-      message: "Please enter the title",
-    });
-  } else {
-    next();
-  }
+  next();
 }
 
 export async function checkUpdateParams(req, res, next) {
+  const userId = req.params.userId || 1;
   const todoId = req.params.todoId;
   let { ...args } = req.body;
-  let fields = Object.keys(args);
-  const allowedFields = ["title", "todo_description", "is_completed"];
-  let notAllowedFields = [];
-  for (let i = 0; i < fields.length; i++) {
-    if (!allowedFields.includes(fields[i])) {
-      notAllowedFields.push(fields[i]);
-    }
-  }
-  if (notAllowedFields != 0) {
-    TodoLogger.warn(`Fields not allowed : ${notAllowedFields}`);
-    res.status(400).json({
-      status: "failure",
-      message: "Fields not allowed !",
-      notAllowedFields,
-    });
-    return;
-  }
 
-  if (req.body.title === "") {
-    TodoLogger.warn("Title is required");
-    res.status(400).json({
+  if (Object.keys(req.body).length === 0) {
+    //To track which user is kidding us
+    TodoLogger.error(`Error, No field in the body request from user ${userId}`);
+    return res.status(400).json({
       status: "failure",
-      message: "Please enter the title",
-    });
-    return;
-  }
-
-  if (args.is_completed) {
-    try {
-      args.is_completed = Boolean(args.is_completed);
-    } catch (error) {
-      TodoLogger.warn("field is_completed must be boolean");
-      res.status(400).json({
-        status: "failure",
-        message: "Please is_completed must be boolean",
-      });
-      return;
-    }
-  }
-
-  if (typeof todoId === "number") {
-    TodoLogger.warn(`Bad todo id: ${todoId}`);
-    res.status(400).json({
-      status: "failure",
-      message: "BAD TODO ID",
+      message: "no field entered",
     });
   } else {
+    let fields = Object.keys(args);
+    const allowedFields = ["title", "todo_description", "is_completed"];
+    let notAllowedFields = [];
+    for (let i = 0; i < fields.length; i++) {
+      if (!allowedFields.includes(fields[i])) {
+        notAllowedFields.push(fields[i]);
+      }
+    }
+    if (notAllowedFields != 0) {
+      TodoLogger.warn(`Fields not allowed : ${notAllowedFields}`);
+      return res.status(400).json({
+        status: "failure",
+        message: "fields not allowed",
+        notAllowedFields,
+      });
+    } else if (args.title === "") {
+      TodoLogger.warn("Title is required");
+      return res.status(400).json({
+        status: "failure",
+        message: "please enter a title",
+      });
+    } else {
+      if (
+        args.is_completed !== undefined &&
+        args.is_completed !== "true" &&
+        args.is_completed !== "false"
+      ) {
+        TodoLogger.warn("field is_completed must be boolean");
+        return res.status(400).json({
+          status: "failure",
+          message: "is_completed must be boolean",
+        });
+      }
+    }
     next();
   }
 }
