@@ -1,7 +1,7 @@
 # Todos apis
 
 ## Description
-This project is built using Express.js, a fast and minimalist web framework for Node.js. It is designed to handle web and mobile application backends efficiently.
+This to-do API project uses Express.js, a fast and minimalist web framework for Node.js. It is designed to handle web and mobile application backends efficiently.
 
 ## Features
 - Lightweight and unopinionated design
